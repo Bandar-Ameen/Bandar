@@ -1,0 +1,153 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+
+namespace ExportDataGridtoCrystalReport
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            //BindData();
+        }
+        private void BindData()
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection con = new SqlConnection("Data Source=SureshDasari;Integrated Security=true;Initial Catalog=MySampleDB"))
+            {
+
+                con.Open();
+                SqlCommand cmd = new SqlCommand("Select * from UserDetails", con);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                con.Close();
+
+            }
+            dataGridView1.DataSource = dt;
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+            /*
+            
+            هذا نستخدمة لجلب البيانات من
+          الي الكرستال ريبوت dataGridView1 الداتا جراد فيو 
+          WriteXmlSchema طبعا اول شئ نقوم بإنشاء 
+          وبعد ذالك 
+          نقوم بإنشاء تقرير ونأخذ ملف XML
+            */
+            DataSet ds =new DataSet();
+            DataTable dt = new DataTable();
+            dt.Columns.Add("UserId", typeof(Int16));
+            dt.Columns.Add("UserName", typeof(string));
+            dt.Columns.Add("FirstName", typeof(string));
+            dt.Columns.Add("LastName", typeof(string));
+            foreach (DataGridViewRow dgr in dataGridView1.Rows)
+            {
+                dt.Rows.Add(dgr.Cells[0].Value, dgr.Cells[1].Value, dgr.Cells[2].Value, dgr.Cells[3].Value);
+            }
+            ds.Tables.Add(dt);
+            ds.WriteXmlSchema(@"D:\Samplee.xml");//هذا مهم
+            CrystalReport3 cr = new CrystalReport3();
+            cr.SetDataSource(ds);
+            crystalReportViewer1.ReportSource = cr;
+            crystalReportViewer1.Refresh();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+           
+            
+            /*
+            هذا كود نستخدمة لمنع تكرار البيانات مع إستبدال 
+           
+            الكلام في الكرستال ريبورت
+            طبعا نقوم بإظافة الكود الي الحقل المراد عمل له منع التكرار
+            format edidtor
+            true for Can Grow
+            Display Strings
+            ونظيف هذا الكود
+
+ if PreviousIsNull({Table1.aweel})  then
+cstr({Table1.aweel})
+else
+if {Table1.aweel}=previous({Table1.aweel})then
+if{Table1.aweel}='السابع'
+then
+'السابع مكرر'
+
+else if{Table1.aweel}='السادس'
+then
+
+'السادس مكرر'
+else if{Table1.aweel}='الاول'
+then
+'الاول مكرر'
+else if{Table1.aweel}='الثاني'
+then
+'الثاني مكرر'
+else if{Table1.aweel}='الثالث'
+then
+'الثالث مكرر'
+else if{Table1.aweel}='الرابع'
+then
+'الرابع مكرر'
+else if{Table1.aweel}='الخامس'
+then
+'الخامس مكرر'
+else if{Table1.aweel}='الثامن'
+then
+'الثامن مكرر'
+else if{Table1.aweel}='التاسع'
+then
+'التاسع مكرر'
+else if{Table1.aweel}='العاشر'
+then
+'العاشر مكرر'
+
+else
+'مكرر'
+else
+cstr({Table1.aweel})
+            */
+
+
+
+
+        }
+        public void rrr() {
+
+            /*
+            SELECT * FROM ( SELECT name_e, addree,class_s, total, DENSE_RANK() OVER ( ORDER BY total DESC ) 
+price_rank  FROM Table_2) t where class_s=2 and price_rank<=3;
+
+
+            وهذا إستعلام في sql server للأخذ اكبر ثلاثة اعداد مع الترتيب والتكرار
+            
+            */
+
+        }
+        public void ddddd()
+        {
+
+            /*
+            هذه الكود يستخدم لجمع صفين او لمقارنه بين صفين 
+            وإظهار الناتج في عمود اخر في التاتا جراد فيو
+            */
+            /*for (int a = 0; a < dataGridView1.Rows.Count; a++)
+            {
+                int d = Convert.ToInt32(dataGridView1.Rows[a].Cells["Column4"].Value);
+                if (d == 1)
+                {
+                    dataGridView1.Rows[a].Cells["Column5"].Value = "الاول";
+                }else
+                    ..
+                        ...
+                        ....
+                        ...
+            }*/
+        }
+            }
+}
